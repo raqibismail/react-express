@@ -109,3 +109,42 @@ export async function logout(token: string) {
 
   return { message: "Logout successful" };
 }
+
+export async function getCurrentUser(token: string) {
+  if (!token) {
+    throw new AppError(401, "Missing token");
+  }
+
+  let payload;
+  try {
+    payload = verifyToken(token); 
+  } catch (err) {
+    throw new AppError(401, "Invalid or expired token");
+  }
+
+  // Check if session still exists (token not revoked)
+  const session = await prisma.session.findUnique({
+    where: { token },
+  });
+
+  if (!session) {
+    throw new AppError(401, "Session not found or expired");
+  }
+
+  // ✅ Get user info (use findUnique with userId)
+  const user = await prisma.user.findUnique({
+    where: { id: payload.userId },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      createdAt: true,
+      updatedAt: true,
+      lastLogin: true,
+    },
+  });
+
+  if (!user) throw new AppError(404, "User not found");
+
+  return user;
+}
