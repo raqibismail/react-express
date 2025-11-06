@@ -8,15 +8,15 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import api from "@/lib/api"
+import { Post, User as UserModel } from "@/lib/model"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
 export default function User() {
     const { id } = useParams()
-    const [user, setUser] = useState<any>(null)
-    const [posts, setPosts] = useState<any[]>([])
+    const [user, setUser] = useState<UserModel>()
+    const [posts, setPosts] = useState<Post[]>([])
     const [loading, setLoading] = useState(true)
-    const [loadingPosts, setLoadingPosts] = useState(true)
 
     useEffect(() => {
         if (!id) return
@@ -25,9 +25,6 @@ export default function User() {
                 await api.get(`/users/${id}`).then(res => {
                     setUser(res.data)
                     setLoading(false)
-                })
-                await api.get(`/posts?userId=${id}`).then(res => {
-                    setPosts(res.data)
                 })
             }
 
@@ -48,17 +45,14 @@ export default function User() {
                     <CardDescription>{user.email}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <p>
-                        {`${user.address.street}, ${user.address.suite}, ${user.address.city}, ${user.address.zipcode}`}
-                    </p>
                 </CardContent>
             </Card>
             <hr className="my-5" />
             <h1 className="text-5xl mb-4">Posts</h1>
             <div className="grid grid-cols-3 gap-4">
                 {
-                    posts.length === 0 ? <p>No posts yet.</p> :
-                        posts.map(post => (
+                    user.posts?.length === 0 ? <p>No posts yet.</p> :
+                        user.posts?.map(post => (
                             <div key={post.id}>
                                 <Card>
                                     <CardHeader>
@@ -66,7 +60,7 @@ export default function User() {
                                     </CardHeader>
                                     <CardContent>
                                         <p className="times">
-                                            {`${post.body}`}
+                                            {`${post.content}`}
                                         </p>
                                     </CardContent>
                                 </Card>

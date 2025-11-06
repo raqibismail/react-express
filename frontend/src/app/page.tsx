@@ -18,14 +18,10 @@ export default function Home() {
   ]
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-semibold mb-2">Routes</h1>
+    <div className="p-4 text-center flex flex-col gap-2">
+      <h1 className="text-3xl">Dashboard</h1>
       {routes.map(route => (
-        <Button key={route.url} onClick={() => {
-          router.push(route.url)
-        }} variant="outline" className="w-full mb-1">
-          {route.name}
-        </Button>
+        <Button key={route.url} onClick={() => { router.push(route.url) }} className="shadow-sm">{route.name}</Button>
       ))}
     </div>
   )

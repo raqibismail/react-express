@@ -4,16 +4,17 @@ import api from "@/lib/api"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { User } from "@/lib/model"
 
 export default function Users() {
-    const [users, setUsers] = useState<any[]>([])
+    const [users, setUsers] = useState<User[]>([])
     const router = useRouter()
 
     useEffect(() => {
         api.get('/users').then(res => setUsers(res.data))
     }, [])
 
-    
+
 
     return (
         <div className="p-4 text-center flex flex-col gap-2">

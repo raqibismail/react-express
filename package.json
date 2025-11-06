@@ -1,0 +1,11 @@
+{
+  "name": "react-practice",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\"",
+    "start": "echo 'Run \"npm run dev\" for development'"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
