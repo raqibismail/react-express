@@ -1,0 +1,44 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../prisma/generated/prisma"
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  name      String
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  lastLogin DateTime?
+  posts     Post[]
+  tokens    Session[]
+}
+
+model Session {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Post {
+  id        Int     @id @default(autoincrement())
+  title     String
+  content   String
+  published Boolean
+  user      User    @relation(fields: [userId], references: [id])
+  userId    Int
+}
+
+enum Role {
+  USER
+  ADMIN
+}
